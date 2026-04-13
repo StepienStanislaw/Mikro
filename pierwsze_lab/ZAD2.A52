@@ -1,0 +1,26 @@
+Podłączyć do portu PI mikrokontrolera 89S8253 osiem diod LED. Następnie
+napisać program, który będzie realizował funkcję 8-bitowego licznika binarnego
+z krążącym „0”. Do odmierzania czasu wykorzystać programowe opóźnienie.
+
+ORG 0
+START:
+    MOV A, #00000001B  ; Wszystkie jedynki = wszystkie diody zgaszone
+
+PETLA:
+    MOV P0, A          ; Pamietaj o P1 z tresci zadania!
+    ACALL OPOZNIENIE
+    RL A              ; Zmniejszamy, zeby "zapalac" kolejne bity
+    SJMP PETLA
+
+OPOZNIENIE:
+    MOV R5, #10      ; <--- Nowa, trzecia petla (zmien te liczbe, by regulowac czas)
+D3:
+    MOV R7, #255
+D1:
+    MOV R6, #255
+D2:
+    DJNZ R6, D2      ; Ta petla wykonuje sie 255 razy
+    DJNZ R7, D1      ; Ta petla wykonuje sie 255 * 255 razy
+    DJNZ R5, D3      ; Ta petla wykonuje sie 10 * 255 * 255 razy
+    RET
+END
